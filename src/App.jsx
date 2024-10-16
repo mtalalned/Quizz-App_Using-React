@@ -12,10 +12,20 @@ const App = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [radioDisabled, setRadioDisabled] = useState(false);
   const [numbersArr , setNumbersArr] = useState ([])
-  
+  const [randomOptions, setrandomOptions] = useState ([])
+  const [nextControl , setNextControl] = useState(false)
+  const [toastControl , setToastControl] = useState (false)
+
   useEffect (()=>{
     getData()
   }, [])
+
+  useEffect (()=>{
+    if (questionArr.length > 0) {
+      const shuffledOptions = shuffleArray([...questionArr[questionNo].incorrectAnswers , questionArr[questionNo].correctAnswer])
+      setrandomOptions(shuffledOptions)
+    }
+  }, [questionNo , questionArr])
 
   function getData (){
     axios ('https://the-trivia-api.com/v2/questions')
@@ -28,24 +38,30 @@ const App = () => {
   }
   
   function NextQuestion () {
-    if (questionNo < questionArr.length - 1){
-      setQuestionNo (questionNo + 1)
-      setRadioCheck (true)
-      setSelectedOption(null)
-      setRadioDisabled(false)
+    
+    if (nextControl) {
+      if (questionNo < questionArr.length - 1){
+        setQuestionNo (questionNo + 1)
+        setRadioCheck (true)
+        setSelectedOption(null)
+        setRadioDisabled(false)
+        setNextControl (false)
+      } else {
+        setQuestionNo (questionNo)
+        setloading(false)
+        setResultPage (true)
+        const numberCheckArr = []
+        for (var i = 0; i < optionArr.length; i++){
+            if (optionArr[i] === questionArr[i].correctAnswer){
+                numberCheckArr.push (10)
+            } else {
+                numberCheckArr.push (0)
+            }
+            setNumbersArr(numberCheckArr)
+      }}
     } else {
-      setQuestionNo (questionNo)
-      setloading(false)
-      setResultPage (true)
-      const numberCheckArr = []
-      for (var i = 0; i < optionArr.length; i++){
-          if (optionArr[i] === questionArr[i].correctAnswer){
-              numberCheckArr.push (10)
-          } else {
-              numberCheckArr.push (0)
-          }
-          setNumbersArr(numberCheckArr)
-    }}
+      setToastControl (true)
+    }
   }
   
   function radioButtonValue (el) {
@@ -54,10 +70,29 @@ const App = () => {
       setSelectedOption(el.target.value)
       setRadioCheck (false)
       setRadioDisabled(true)
-      console.log (optionArr)
+      setNextControl (true)
     }
   }
   
+  function ToastControl () {
+    setToastControl (false)
+  }
+
+  function shuffleArray (arr) {
+    const randomNumberArray = []
+    const shuffledArray = []
+    for (var i = 0; i < arr.length; i++){
+        const randomNumber = Math.floor (Math.random()*arr.length)
+        if (randomNumberArray.includes(randomNumber)) {
+            i--
+        } else {
+            randomNumberArray.push (randomNumber)
+            shuffledArray[randomNumber] = arr[i]
+        }
+    }
+    
+    return shuffledArray
+  }
   
   return (
     <>
@@ -71,7 +106,7 @@ const App = () => {
         <p>{questionArr[questionNo].question.text}</p>
         </div>
         
-        {questionArr.length > 0 ? [...questionArr[questionNo].incorrectAnswers , questionArr[questionNo].correctAnswer].map ((items , index)=> {
+        {questionArr.length > 0 ? randomOptions.map ((items , index)=> {
           return <div key={index}>
           <input type="radio" id={`question-`+ index} name='question' value={items} onChange={el => radioButtonValue(el)} checked={selectedOption === items} disabled={radioDisabled}/>
           <label htmlFor={`question-`+ index}>{items}</label><br />
@@ -98,13 +133,16 @@ const App = () => {
       </div>
       
       <div>
-        <p>Total Obtained Marks: {}</p>
+        <p>Total Obtained Marks: {numbersArr.reduce((accumulator , currentValue)=> {
+          return accumulator + currentValue
+        }, 0)}</p>
       </div>
       
       </div>
       
        : <div>Loading......</div>}
       
+      {toastControl ? <div>Please Select an Option <button onClick={ToastControl}>ok</button></div> : null}
     </>
   )
 }
