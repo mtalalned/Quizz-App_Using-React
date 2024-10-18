@@ -127,28 +127,44 @@ const App = () => {
       <div>
       
       <div className='flex flex-col gap-y-5 p-5 bg-[#ffffff] border-[2px] border-indigo-700 shadow-[0_0px_20px_5px_#ffffff] rounded-xl'>
+      
         <div>
           <h1 className='p-1 text-center bg-[#0f469a] text-white rounded-md text-3xl shadow-md font-bold'>RESULTS</h1>
         </div>
-      {optionArr.map ((items , index) => {
-        return <div className='flex gap-x-5'>
-          <p className='basis-[5%]'>Q.NO {index + 1}</p>
-          <p className='basis-[25%]'>Selected Option: {items}</p>
-          <p className='basis-[25%]'>Correct Option: {questionArr[index].correctAnswer}</p>
-          <p className='basis-[25%]'>Score: {numbersArr[index]}</p>
+      
+        <div className='overflow-auto flex flex-col gap-y-4 p-5 border-gray-900 shadow-[0_0px_15px_1px_#e1e1e1] h-[300px] rounded-md'>
+        {optionArr.map ((items , index) => {
+        return <div className='flex flex-wrap justify-center items-center gap-x-5 gap-y-5 border-gray-900 rounded-md shadow-[0_0px_5px_2px_#e1e1e1]'>
+          <div className='basis-[100%] min-[414px]:basis-[40%] min-[800px]:basis-[20%] min-w-[135px] flex flex-col gap-y-1'>
+          <p className='text-center bg-[#6a95d7] text-white rounded-md py-1'>Question No</p>
+          <p className='text-center'>{index + 1}</p>
+          </div>
+          <div className='basis-[100%] min-[414px]:basis-[40%] min-[800px]:basis-[20%] min-w-[135px] flex flex-col gap-y-1'>
+          <p className='text-center bg-[#6a95d7] text-white rounded-md py-1'>Selected Option</p>
+          <p className='text-center'>{items}</p>
+          </div>
+          <div className='basis-[100%] min-[414px]:basis-[40%] min-[800px]:basis-[20%] min-w-[135px] flex flex-col gap-y-1'>
+            <p className='text-center bg-[#6a95d7] text-white rounded-md py-1'>Correct Option</p>
+            <p className='text-center'>{questionArr[index].correctAnswer}</p>
+          </div>
+          <div className='basis-[100%] min-[414px]:basis-[40%] min-[800px]:basis-[20%] min-w-[135px] flex flex-col gap-y-1'>
+          <p className='text-center bg-[#6a95d7] text-white rounded-md py-1'>Score</p>
+          <p className='text-center'>{numbersArr[index]}</p>
+          </div>
         </div>
-      })}
+        })}
+        </div>
+      
+        <div>
+          <p className='p-1 text-center bg-[#0f469a] text-white rounded-md text-3xl shadow-md font-bold'>Total Obtained Marks: {numbersArr.reduce((accumulator , currentValue)=> {
+            return accumulator + currentValue
+          }, 0)} / 100</p>
+        </div>
       </div>
       
-      <div>
-        <p>Total Obtained Marks: {numbersArr.reduce((accumulator , currentValue)=> {
-          return accumulator + currentValue
-        }, 0)}</p>
       </div>
-      
-      </div>
-      
-       : <div className='max-h-screen flex justify-center p-5 bg-[#ffffff] border-[2px] border-indigo-700 shadow-[0_0px_20px_5px_#ffffff] rounded-xl text-3xl text-[#0f469a]'>Loading......</div>}
+       
+       : <div className='max-h-screen flex justify-center p-5 bg-[#ffffff] border-[2px] border-indigo-700 shadow-[0_0px_20px_5px_#ffffff] rounded-xl text-3xl text-[#0f469a]'>Loading......</div> }
       
       {toastControl ? 
       <div className='absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center'>
@@ -159,8 +175,8 @@ const App = () => {
         </div>
         </div>
       </div>
-
        : null}
+
     </>
   )
 }
