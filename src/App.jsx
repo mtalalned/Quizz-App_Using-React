@@ -16,6 +16,7 @@ const App = () => {
   const [nextControl , setNextControl] = useState(false)
   const [toastControl , setToastControl] = useState (false)
   const [blurScreen , setBlurScreen] = useState(false)
+  
   useEffect (()=>{
     getData()
   }, [])
@@ -134,7 +135,7 @@ const App = () => {
       
         <div className='overflow-auto flex flex-col gap-y-4 p-5 border-gray-900 shadow-[0_0px_15px_1px_#e1e1e1] h-[300px] rounded-md'>
         {optionArr.map ((items , index) => {
-        return <div className='flex flex-wrap justify-center items-center gap-x-5 gap-y-5 border-gray-900 rounded-md shadow-[0_0px_5px_2px_#e1e1e1]'>
+        return <div className='flex flex-wrap justify-center items-start gap-x-5 gap-y-5 border-gray-900 rounded-md shadow-[0_0px_5px_2px_#e1e1e1]'>
           <div className='basis-[100%] min-[414px]:basis-[40%] min-[800px]:basis-[20%] min-w-[135px] flex flex-col gap-y-1'>
           <p className='text-center bg-[#6a95d7] text-white rounded-md py-1'>Question No</p>
           <p className='text-center'>{index + 1}</p>
